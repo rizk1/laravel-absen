@@ -34,6 +34,21 @@
         <div class="text-center"><button id="absen" class="btn btn-absen">Absen</button></div>
     </div>
 </div>
+<div class="block">
+    <div class="block-content">
+        
+         <br />
+         {{-- <small>
+           <a 
+            href="https://maps.google.com/maps?q='+data.lat+','+data.lon+'&hl=es;z=14&amp;output=embed" 
+            style="color:#0000FF;text-align:left" 
+            target="_blank"
+           >
+             See map bigger
+           </a>
+         </small> --}}
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -58,11 +73,24 @@ $("#absen").on('click', function(e) {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    $.ajax({
+    var longitude = 0;
+    var latitude = 0;
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(showPosition);
+    } 
+
+    function showPosition(position) {
+        var longitude = position.coords.longitude;
+        var latitude = position.coords.latitude;
+        
+        $.ajax({
         method: 'POST',
         url: "{{url('absen')}}",
         data: {
             _token: '{{ csrf_token() }}',
+            long: longitude,
+            lat: latitude
         },
         success: function(data) {
             if (data.msg == 'success') {
@@ -80,6 +108,7 @@ $("#absen").on('click', function(e) {
             }
         },
     });
+    }
 });
 </script>
 @endsection

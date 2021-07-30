@@ -105,7 +105,7 @@
                                 <!-- Sign In Form -->
                                 <!-- jQuery Validation functionality is initialized with .js-validation-signin class in js/pages/op_auth_signin.min.js which was auto compiled from _es6/pages/op_auth_signin.js -->
                                 <!-- For more examples you can check out https://github.com/jzaefferer/jquery-validation -->
-                                @if(Request::get('action') == 'login')   
+                                @if(Request::get('action') == 'login' || Request::get('action') == '')   
                                 <form action="{{url('/login')}}" method="post">
                                     @csrf                      
                                     <div class="block block-themed block-rounded block-shadow">

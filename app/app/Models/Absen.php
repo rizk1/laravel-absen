@@ -14,6 +14,13 @@ class Absen extends Model
         'jam_absen',
         'type',
         'status',
-        'tanggal'
+        'tanggal',
+        'long',
+        'lat'
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user', 'id');
+    }
 }

@@ -11,14 +11,17 @@ class AbsenController extends Controller
 {
     public function index()
     {
-        return view('absen-page');
+        return view('absen.absen-page');
     }
 
     public function absen(Request $request)
     {
         if (!Auth::check()) {
             return \response()->json([
-                'msg' => 'session expired',
+                'msg' => 'failed',
+                'alert' => 'Session expired',
+                'type' => 'error'
+
             ]);
         }
         //absen mulai masuk
@@ -41,6 +44,8 @@ class AbsenController extends Controller
                     'jam_absen' => $jam,
                     'type' => 'masuk',
                     'status' => 'telat',
+                    'long' => $request->long,
+                    'lat' => $request->lat,
                     'tanggal' => $jam
                 ]);
 
@@ -65,6 +70,8 @@ class AbsenController extends Controller
                         'jam_absen' => $jam,
                         'type' => 'masuk',
                         'status' => 'tepat waktu',
+                        'long' => $request->long,
+                        'lat' => $request->lat,
                         'tanggal' => $jam
                     ]);
     
@@ -90,6 +97,8 @@ class AbsenController extends Controller
                     'id_user' => Auth::user()->id,
                     'jam_absen' => date('Y-m-d H:i:s'),
                     'type' => 'pulang',
+                    'long' => $request->long,
+                    'lat' => $request->lat,
                     'tanggal' => date('Y-m-d')
                 ]);
 

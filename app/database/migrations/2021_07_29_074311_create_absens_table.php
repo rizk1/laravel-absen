@@ -19,6 +19,8 @@ class CreateAbsensTable extends Migration
             $table->dateTime('jam_absen');
             $table->enum('type', ['masuk', 'pulang']);
             $table->enum('status', ['tepat waktu', 'telat']);
+            $table->double('long');
+            $table->double('lat');
             $table->date('tanggal');
             $table->timestamps();
         });

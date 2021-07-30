@@ -113,6 +113,12 @@
                             <li>
                                 <a href="be_pages_dashboard.html"><i class="si si-cup"></i><span class="sidebar-mini-hide">Dashboard</span></a>
                             </li>
+                            <li>
+                                <a href="{{url('/absen')}}"><i class="si si-cup"></i><span class="sidebar-mini-hide">Absen</span></a>
+                            </li>
+                            <li>
+                                <a href="{{url('/data-absen')}}"><i class="si si-cup"></i><span class="sidebar-mini-hide">Data Absen</span></a>
+                            </li>
                         </ul>
                     </div>
                     <!-- END Side Navigation -->
