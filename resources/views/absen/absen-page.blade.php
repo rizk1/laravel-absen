@@ -69,7 +69,33 @@ $("#absen").on('click', function(e) {
         var longitude = position.coords.longitude;
         var latitude = position.coords.latitude;
         
-        $.ajax({
+        // $.ajax({
+        //     method: 'POST',
+        //     url: "{{url('absen')}}",
+        //     data: {
+        //         _token: '{{ csrf_token() }}',
+        //         long: longitude,
+        //         lat: latitude
+        //     },
+        //     success: function(data) {
+        //         if (data.msg == 'success') {
+        //             // console.log(data);
+        //             swal({
+        //                 title: data.alert,
+        //                 type: data.type
+        //             });
+        //         } else {
+        //             // console.log(data);
+        //             swal({
+        //                 title: data.alert,
+        //                 type: data.type
+        //             });
+        //         }
+        //     },
+        // });
+    }
+    
+    $.ajax({
         method: 'POST',
         url: "{{url('absen')}}",
         data: {
@@ -93,7 +119,6 @@ $("#absen").on('click', function(e) {
             }
         },
     });
-    }
 });
 </script>
 @endsection
