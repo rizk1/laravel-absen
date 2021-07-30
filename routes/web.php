@@ -20,9 +20,7 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
-Route::get('/', function () {
-    return view('layout.app-layout');
-});
+
 
 
 
@@ -38,6 +36,9 @@ Route::post('/register', [UserController::class, 'registerUser']);
 Route::get('/logout', [UserController::class, 'logout']);
 
 Route::group(['middleware' => ['auth']], function() {
+    Route::get('/', function () {
+        return view('layout.app-layout');
+    });
     Route::get('/absen', [AbsenController::class, 'index']);
     Route::post('/absen', [AbsenController::class, 'absen']);
     Route::get('/data-absen', [DataAbsenController::class, 'index']);
