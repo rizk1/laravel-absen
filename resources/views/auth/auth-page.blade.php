@@ -71,11 +71,16 @@
                                             </div>
                                         </div>
                                         <div class="block-content">
-                                            @if ($errors->any())
+                                            {{-- @if ($errors->any())
                                             <div class="alert alert-danger">
                                                 <p class="m-0 text-center">Username atau password salah</p>
                                             </div>
-                                            @endif   
+                                            @endif    --}}
+                                            @error('error')
+                                            <div class="alert alert-danger">
+                                                <p class="m-0 text-center">{{ $message }}</p>
+                                            </div>
+                                            @enderror
                                             <div class="form-group row">
                                                 <div class="col-12">
                                                     <label>Email</label>

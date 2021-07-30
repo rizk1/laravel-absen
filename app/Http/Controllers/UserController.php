@@ -28,7 +28,7 @@ class UserController extends Controller
 
         if ($request->email != 'test@gmail.com') {
             return back()->withErrors([
-                'email' => 'menten',
+                'error' => 'menten',
             ]);
         }
 
@@ -40,7 +40,7 @@ class UserController extends Controller
             }
 
             return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
+                'error' => 'Username atau password salah',
             ]);
         }else {
             if (Auth::attempt($credentials, $remember)) {
@@ -50,30 +50,34 @@ class UserController extends Controller
             }
 
             return back()->withErrors([
-                'email' => 'The provided credentials do not match our records.',
+                'error' => 'Username atau password salah',
             ]);
         }
     }
 
     public function registerUser(Request $request)
     {
-        $field = $request->validate([
-            'name' => 'required|string',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|confirmed'
+        // $field = $request->validate([
+        //     'name' => 'required|string',
+        //     'email' => 'required|string|email|unique:users,email',
+        //     'password' => 'required|string|confirmed'
+        // ]);
+
+        // $rand = Str::random(60);
+        // $user = User::create([
+        //     'name' => $field['name'],
+        //     'email' => $field['email'],
+        //     'password' => bcrypt($field['password']),
+        //     'remember_token' => $rand
+        // ]);
+
+        // Auth::login($user);
+
+        // return redirect('/absen');
+
+        return back()->withErrors([
+            'error' => 'menten',
         ]);
-
-        $rand = Str::random(60);
-        $user = User::create([
-            'name' => $field['name'],
-            'email' => $field['email'],
-            'password' => bcrypt($field['password']),
-            'remember_token' => $rand
-        ]);
-
-        Auth::login($user);
-
-        return redirect('/absen');
     }
 
     public function logout(Request $request)
