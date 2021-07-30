@@ -31,7 +31,14 @@
 <div class="block">
     <div class="block-content">
         <div id="clock" class="clock">loading ...</div>
-        <div class="text-center mb-20"><button id="absen" class="btn btn-absen">Absen</button></div>
+        <div class="row justify-content-md-center">
+            <div class="col-md-2 text-center mb-20">
+                <button id="absen" class="btn btn-absen btn-block">Absen</button>
+            </div>
+            <div class="col-md-2 text-center mb-20">
+                <button id="izin" class="btn btn-absen btn-block">Izin</button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -69,56 +76,31 @@ $("#absen").on('click', function(e) {
         var longitude = position.coords.longitude;
         var latitude = position.coords.latitude;
         
-        // $.ajax({
-        //     method: 'POST',
-        //     url: "{{url('absen')}}",
-        //     data: {
-        //         _token: '{{ csrf_token() }}',
-        //         long: longitude,
-        //         lat: latitude
-        //     },
-        //     success: function(data) {
-        //         if (data.msg == 'success') {
-        //             // console.log(data);
-        //             swal({
-        //                 title: data.alert,
-        //                 type: data.type
-        //             });
-        //         } else {
-        //             // console.log(data);
-        //             swal({
-        //                 title: data.alert,
-        //                 type: data.type
-        //             });
-        //         }
-        //     },
-        // });
+        $.ajax({
+            method: 'POST',
+            url: "{{url('absen')}}",
+            data: {
+                _token: '{{ csrf_token() }}',
+                long: longitude,
+                lat: latitude
+            },
+            success: function(data) {
+                if (data.msg == 'success') {
+                    // console.log(data);
+                    swal({
+                        title: data.alert,
+                        type: data.type
+                    });
+                } else {
+                    // console.log(data);
+                    swal({
+                        title: data.alert,
+                        type: data.type
+                    });
+                }
+            },
+        });
     }
-    
-    $.ajax({
-        method: 'POST',
-        url: "{{url('absen')}}",
-        data: {
-            _token: '{{ csrf_token() }}',
-            long: longitude,
-            lat: latitude
-        },
-        success: function(data) {
-            if (data.msg == 'success') {
-                // console.log(data);
-                swal({
-                    title: data.alert,
-                    type: data.type
-                });
-            } else {
-                // console.log(data);
-                swal({
-                    title: data.alert,
-                    type: data.type
-                });
-            }
-        },
-    });
 });
 </script>
 @endsection

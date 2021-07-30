@@ -88,18 +88,7 @@
                             </a>
                             <ul class="list-inline mt-10">
                                 <li class="list-inline-item">
-                                    <a class="link-effect text-dual-primary-dark font-size-xs font-w600 text-uppercase" href="be_pages_generic_profile.html">J. Smith</a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <!-- Layout API, functionality initialized in Template._uiApiLayout() -->
-                                    <a class="link-effect text-dual-primary-dark" data-toggle="layout" data-action="sidebar_style_inverse_toggle" href="javascript:void(0)">
-                                        <i class="si si-drop"></i>
-                                    </a>
-                                </li>
-                                <li class="list-inline-item">
-                                    <a class="link-effect text-dual-primary-dark" href="op_auth_signin.html">
-                                        <i class="si si-logout"></i>
-                                    </a>
+                                    <a class="link-effect text-dual-primary-dark font-size-xs font-w600 text-uppercase" href="be_pages_generic_profile.html">{{Auth::user()->name}}</a>
                                 </li>
                             </ul>
                         </div>
@@ -145,7 +134,7 @@
                         <div class="btn-group" role="group">
                             <button type="button" class="btn btn-rounded btn-dual-secondary" id="page-header-user-dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-user d-sm-none"></i>
-                                <span class="d-none d-sm-inline-block">J. Smith</span>
+                                <span class="d-none d-sm-inline-block">{{Auth::user()->name}}</span>
                                 <i class="fa fa-angle-down ml-5"></i>
                             </button>
                             <div class="dropdown-menu dropdown-menu-right min-width-200" aria-labelledby="page-header-user-dropdown">
