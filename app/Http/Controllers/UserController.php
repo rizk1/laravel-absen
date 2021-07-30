@@ -26,6 +26,12 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
+        if ($request->email != 'test@gmail.com') {
+            return back()->withErrors([
+                'email' => 'menten',
+            ]);
+        }
+
         if (!$request->remember) {
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
