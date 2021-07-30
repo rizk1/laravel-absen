@@ -111,9 +111,6 @@
                     <div class="content-side content-side-full">
                         <ul class="nav-main">
                             <li>
-                                <a href="be_pages_dashboard.html"><i class="si si-cup"></i><span class="sidebar-mini-hide">Dashboard</span></a>
-                            </li>
-                            <li>
                                 <a href="{{url('/absen')}}"><i class="si si-cup"></i><span class="sidebar-mini-hide">Absen</span></a>
                             </li>
                             <li>

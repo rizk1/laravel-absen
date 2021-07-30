@@ -35,6 +35,7 @@ class AbsenController extends Controller
         //
 
         $cekMasuk = Absen::where('type', 'masuk')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
+        $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
 
         if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s') <= $fromPulang) {
             if (!$cekMasuk) {
@@ -83,7 +84,7 @@ class AbsenController extends Controller
                 }else {
                     return \response()->json([
                         'msg' => 'failed',
-                        'alert' => 'Sudah absen',
+                        'alert' => 'Sudah absen masuk',
                         'type' => 'warning'
                     ]);
                 }
@@ -91,7 +92,6 @@ class AbsenController extends Controller
         }
 
         if (date('Y-m-d H:i:s') >= $fromPulang && date('Y-m-d H:i:s') <= $toPulang) {
-            $cekPulang = Absen::where('type', 'pulang')->where('id', Auth::user()->id)->first();
             if (!$cekPulang) {
                 $absen = Absen::create([
                     'id_user' => Auth::user()->id,
@@ -104,18 +104,21 @@ class AbsenController extends Controller
 
                 return \response()->json([
                     'msg' => 'success',
-                    'alert' => 'Berhasil absen pulang'
+                    'alert' => 'Berhasil absen pulang',
+                    'type' => 'success'
                 ]);
             }else {
                 return \response()->json([
                     'msg' => 'failed',
-                    'alert' => 'Sudah absen'
+                    'alert' => 'Sudah absen pulang',
+                    'type' => 'warning'
                 ]);
             }
         }else {
             return \response()->json([
                 'msg' => 'failed',
-                'alert' => 'Sudah lewat waktu absen'
+                'alert' => 'Sudah lewat waktu absen',
+                'type' => 'error'
             ]);
         }
     }

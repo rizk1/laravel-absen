@@ -31,22 +31,7 @@
 <div class="block">
     <div class="block-content">
         <div id="clock" class="clock">loading ...</div>
-        <div class="text-center"><button id="absen" class="btn btn-absen">Absen</button></div>
-    </div>
-</div>
-<div class="block">
-    <div class="block-content">
-        
-         <br />
-         {{-- <small>
-           <a 
-            href="https://maps.google.com/maps?q='+data.lat+','+data.lon+'&hl=es;z=14&amp;output=embed" 
-            style="color:#0000FF;text-align:left" 
-            target="_blank"
-           >
-             See map bigger
-           </a>
-         </small> --}}
+        <div class="text-center mb-20"><button id="absen" class="btn btn-absen">Absen</button></div>
     </div>
 </div>
 @endsection

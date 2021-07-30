@@ -41,5 +41,6 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/absen', [AbsenController::class, 'index']);
     Route::post('/absen', [AbsenController::class, 'absen']);
     Route::get('/data-absen', [DataAbsenController::class, 'index']);
+    Route::get('/map-data/{id}', [DataAbsenController::class, 'showMap']);
 });
 

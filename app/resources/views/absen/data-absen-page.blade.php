@@ -31,20 +31,23 @@
             <thead>
                 <tr>
                     <th class="text-center"></th>
-                    <th>Name</th>
+                    <th>Nama</th>
                     <th class="d-none d-sm-table-cell">Email</th>
                     <th class="d-none d-sm-table-cell">Status</th>
                     <th class="d-none d-sm-table-cell">Tipe</th>
                     <th class="d-none d-sm-table-cell">Waktu Absen</th>
                     <th class="d-none d-sm-table-cell">Tanggal</th>
                     <th class="d-none d-sm-table-cell">Peta Absen</th>
-                    <th class="text-center" style="width: 15%;">Profile</th>
+                    <th class="text-center" style="width: 15%;">Aksi</th>
                 </tr>
             </thead>
             <tbody>
+                @php
+                    $no = 1;
+                @endphp
                 @foreach ($data as $absen)
                 <tr>
-                    <td class="text-center">1</td>
+                    <td class="text-center">{{$no++}}</td>
                     <td class="font-w600">{{$absen->user->name}}</td>
                     <td class="d-none d-sm-table-cell">{{$absen->user->email}}</td>
                     @if ($absen->status == 'tepat waktu')
@@ -61,7 +64,7 @@
                     <td class="d-none d-sm-table-cell">{{$absen->jam_absen}}</td>
                     <td class="d-none d-sm-table-cell">{{$absen->tanggal}}</td>
                     <td class="d-none d-sm-table-cell">
-                        <button type="button" class="btn btn-alt-info" id="map-show-data" data-id="{{$absen->id}}">Lihat Detail</button>
+                        <button type="button" class="btn btn-alt-info map-show-data" data-id="{{$absen->id}}">Lihat Detail</button>
                     </td>
                     <td class="text-center">
                         <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
@@ -76,7 +79,7 @@
 </div>
 
 <!-- Large Modal -->
-<div class="modal fade" id="modal-large" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
+<div class="modal fade" id="modal-map" tabindex="-1" role="dialog" aria-labelledby="modal-large" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="block block-themed block-transparent mb-0">
@@ -89,15 +92,7 @@
                     </div>
                 </div>
                 <div class="block-content">
-                    <div id="map-data" class="map-responsive">
-                        <iframe 
-                        width="600" 
-                        height="350" 
-                        frameborder="0" 
-                        allowfullscreen=""
-                        src="https://maps.google.com/maps?q=+-6.3517663+,+106.9799218+&hl=id&z=14&amp;output=embed"
-                        ></iframe>
-                    </div>
+                    <div id="map-data" class="map-responsive"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -113,8 +108,10 @@
 <script src="{{asset('assets/js/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('assets/js/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('assets/js/be_tables_datatables.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+<script src="https://momentjs.com/downloads/moment.js"></script>
 <script>
-$("#map-show-data").on('click', function(e) {
+$(".map-show-data").on('click', function(e) {
     e.preventDefault();
     $.ajaxSetup({
         headers: {
@@ -122,19 +119,20 @@ $("#map-show-data").on('click', function(e) {
         }
     });
 
+    var dataId = $(this).attr('data-id');
+    console.log(dataId)
     $.ajax({
-        method: 'POST',
-        url: "{{url('absen')}}",
-        data: {
-            _token: '{{ csrf_token() }}',
-        },
+        method: 'GET',
+        url: "{{url('map-data')}}/" + dataId,
+        // data: {
+        //     _token: '{{ csrf_token() }}',
+        // },
         success: function(data) {
             if (data.msg == 'success') {
                 // console.log(data);
-                swal({
-                    title: data.alert,
-                    type: data.type
-                });
+                $('#iframe-map').remove();
+                $('#map-data').append(data.mapData);
+                $('#modal-map').modal('show');
             } else {
                 // console.log(data);
                 swal({
