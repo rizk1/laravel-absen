@@ -34,16 +34,26 @@ class AbsenController extends Controller
         $toPulang = date('Y-m-d 20:00:00');
         //
 
+        // return \response()->json([
+        //     'time' => date('Y-m-d H:i:s'); 
+        // ]);
+
         $cekMasuk = Absen::where('type', 'masuk')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
         $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-
-        if ($cekMasuk) {
+        
+        //kalo telat absen pas masuk
+        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s') <= $fromPulang) {
             return \response()->json([
-                'msg' => 'failed',
-                'alert' => 'Anda sudah absen',
-                'text' => 'Anda sudah melakukan absen masuk',
-                'type' => 'warning'
+                'msg' => 'warning',
             ]);
+        }
+        
+        //kalo telat absen pas pulang
+        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $fromMasuk) {
+            return \response()->json([
+                'msg' => 'warning',
+            ]);
+        
         }
 
         if (date('Y-m-d H:i:s') >= $fromMasuk && date('Y-m-d H:i:s') <= $toMasuk) {
@@ -73,12 +83,6 @@ class AbsenController extends Controller
                     'type' => 'warning'
                 ]);
             }
-        }else {
-            return \response()->json([
-                'msg' => 'warning',
-                // 'alert' => 'Sudah absen masuk',
-                // 'type' => 'warning'
-            ]);
         }
 
         if (date('Y-m-d H:i:s') >= $fromPulang && date('Y-m-d H:i:s') <= $toPulang) {
@@ -104,12 +108,6 @@ class AbsenController extends Controller
                     'type' => 'warning'
                 ]);
             }
-        }else {
-            return \response()->json([
-                'msg' => 'warning',
-                // 'alert' => 'Sudah lewat waktu absen',
-                // 'type' => 'error'
-            ]);
         }
     }
 
@@ -133,7 +131,7 @@ class AbsenController extends Controller
             $type = 'masuk';
         }
         //kalo telat absen pas pulang
-        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $toMasuk) {
+        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $fromMasuk) {
             $type = 'pulang';
         
         }
