@@ -86,7 +86,6 @@ $("#absen").on('click', function(e) {
                 lat: latitude
             },
             success: function(data) {
-                console.log(data)
                 if (data.msg == 'success') {
                     // console.log(data);
                     Swal.fire({
