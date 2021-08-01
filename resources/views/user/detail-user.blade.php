@@ -1,7 +1,7 @@
 @extends('layout.app-layout')
 
 @section('css')
-<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+{{-- <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet"> --}}
 @endsection
 
 @section('content')
@@ -17,8 +17,8 @@
 @endsection
 
 @section('js')
-<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+{{-- <script src="https://unpkg.com/filepond/dist/filepond.js"></script> --}}
 <script>
-FilePond.parse(document.body);
+// FilePond.parse(document.body);
 </script>
 @endsection
