@@ -1,7 +1,7 @@
 @extends('layout.app-layout')
 
 @section('css')
-<link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'>
+{{-- <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.min.css'> --}}
 <style>
     .clock {
         height: 100px;
@@ -44,7 +44,8 @@
 @endsection
 
 @section('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script> --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.1/jquery.fittext.min.js"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script>
@@ -87,15 +88,50 @@ $("#absen").on('click', function(e) {
             success: function(data) {
                 if (data.msg == 'success') {
                     // console.log(data);
-                    swal({
+                    Swal.fire({
                         title: data.alert,
-                        type: data.type
+                        text: data.text,
+                        icon: data.type
                     });
-                } else {
+                } 
+                else if (data.msg == 'warning') {
+                    Swal.fire({
+                        title: 'Waktu absen habis',
+                        text: "Apakah anda ingin tetap absen terlambat?",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Yes'
+                        }).then((result) => {
+                        if (result.isConfirmed) {
+                            $.ajax({
+                                method: 'POST',
+                                url: "{{url('absen-telat')}}",
+                                data: {
+                                    _token: '{{ csrf_token() }}',
+                                    isTelat: 1,
+                                    long: longitude,
+                                    lat: latitude
+                                },
+                                success: function(data) {
+                                    // console.log(data)
+                                    Swal.fire({
+                                        title: data.alert,
+                                        icon: data.type
+                                    })
+                                },
+                            });
+                            
+                        }
+                    })
+                }
+                else {
                     // console.log(data);
-                    swal({
+                    Swal.fire({
                         title: data.alert,
-                        type: data.type
+                        text: data.text,
+                        icon: data.type
                     });
                 }
             },

@@ -9,7 +9,7 @@ class DataAbsenController extends Controller
 {
     public function index()
     {
-        $data = Absen::with('user')->get();
+        $data = Absen::with('user')->latest()->get();
         // dd($data);
         return view('absen.data-absen-page', \compact('data'));
     }

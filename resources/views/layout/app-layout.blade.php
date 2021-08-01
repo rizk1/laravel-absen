@@ -29,7 +29,7 @@
 
         <!-- Fonts and Codebase framework -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Muli:300,400,400i,600,700">
-        <link rel="stylesheet" id="css-main" href="{{asset('assets/css/codebase.min.css')}}">
+        <link rel="stylesheet" id="css-main" href="{{URL::asset('assets/css/codebase.min.css')}}">
         @yield('css')
 
     </head>
@@ -77,7 +77,7 @@
                     <div class="content-side content-side-full content-side-user px-10 align-parent">
                         <!-- Visible only in mini mode -->
                         <div class="sidebar-mini-visible-b align-v animated fadeIn">
-                            <img class="img-avatar img-avatar32" src="assets/media/avatars/avatar15.jpg" alt="">
+                            <img class="img-avatar img-avatar32" src="{{asset('assets/media/avatars/avatar15.jpg')}}" alt="">
                         </div>
                         <!-- END Visible only in mini mode -->
 
@@ -139,7 +139,7 @@
                             </button>
                             <div class="dropdown-menu dropdown-menu-right min-width-200" aria-labelledby="page-header-user-dropdown">
                                 <h5 class="h6 text-center py-10 mb-5 border-b text-uppercase">User</h5>
-                                <a class="dropdown-item" href="be_pages_generic_profile.html">
+                                <a class="dropdown-item" href="{{url('/detail-user/'.Auth::user()->id)}}">
                                     <i class="si si-user mr-5"></i> Profile
                                 </a>
                                 <a class="dropdown-item d-flex align-items-center justify-content-between" href="be_pages_generic_inbox.html">

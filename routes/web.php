@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\DataAbsenController;
+use App\Http\Controllers\DetailUserController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,7 +42,10 @@ Route::group(['middleware' => ['auth']], function() {
     });
     Route::get('/absen', [AbsenController::class, 'index']);
     Route::post('/absen', [AbsenController::class, 'absen']);
+    Route::post('/absen-telat', [AbsenController::class, 'absenTelat']);
     Route::get('/data-absen', [DataAbsenController::class, 'index']);
     Route::get('/map-data/{id}', [DataAbsenController::class, 'showMap']);
+
+    Route::get('/detail-user/{id}', [DetailUserController::class, 'index']);
 });
 
