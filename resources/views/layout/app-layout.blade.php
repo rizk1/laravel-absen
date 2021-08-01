@@ -240,7 +240,9 @@
                 Swal.fire({
                     title: 'Please Wait !',
                     html: 'Loading...',// add html attribute if you want or remove
+                    icon: 'info',
                     allowOutsideClick: false,
+                    showConfirmButton: false,
                     onBeforeOpen: () => {
                         Swal.showLoading()
                     },
