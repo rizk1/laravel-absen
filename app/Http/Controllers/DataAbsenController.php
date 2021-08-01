@@ -20,7 +20,7 @@ class DataAbsenController extends Controller
         if ($data) {
             return \response()->json([
                 'msg' => 'success',
-                'mapData' => '<iframe id="iframe-map" width="600" height="350" frameborder="0" allowfullscreen=""src="https://maps.google.com/maps?q=+-6.3517663+,+106.9799218+&hl=id&z=14&amp;output=embed"></iframe>',
+                'mapData' => '<iframe id="iframe-map" width="600" height="350" frameborder="0" allowfullscreen=""src="https://maps.google.com/maps?q=+'.$data->lat.'+,+'.$data->long.'+&hl=id&z=14&amp;output=embed"></iframe>',
                 'alert' => 'Data found',
                 'type' => 'success'
             ]);
