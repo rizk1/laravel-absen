@@ -40,20 +40,13 @@ class AbsenController extends Controller
 
         $cekMasuk = Absen::where('type', 'masuk')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
         $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-        
-        //kalo telat absen pas masuk
-        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s') <= $fromPulang) {
-            return \response()->json([
-                'msg' => 'warning',
-            ]);
-        }
 
-        //kalo telat absen pas pulang
-        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $fromMasuk) {
+        if ($cekMasuk || $cekPulang) {
             return \response()->json([
-                'msg' => 'warning',
+                'msg' => 'failed',
+                'alert' => 'Anda Sudah Absen',
+                'type' => 'warning'
             ]);
-        
         }
 
         if (date('Y-m-d H:i:s') >= $fromMasuk && date('Y-m-d H:i:s') <= $toMasuk) {
@@ -110,6 +103,21 @@ class AbsenController extends Controller
                 ]);
             }
         }
+
+        //kalo telat absen pas masuk
+        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromPulang) {
+            return \response()->json([
+                'msg' => 'warning',
+            ]);
+        }
+
+        //kalo telat absen pas pulang
+        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromMasuk) {
+            return \response()->json([
+                'msg' => 'warning',
+            ]);
+        
+        }
     }
 
     public function absenTelat(Request $request)
@@ -128,11 +136,11 @@ class AbsenController extends Controller
         $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
 
         //kalo telat absen pas masuk
-        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s') <= $fromPulang) {
+        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromPulang) {
             $type = 'masuk';
         }
         //kalo telat absen pas pulang
-        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $fromMasuk) {
+        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromMasuk) {
             $type = 'pulang';
         
         }

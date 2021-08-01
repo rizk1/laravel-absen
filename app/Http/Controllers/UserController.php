@@ -26,11 +26,11 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        if ($request->email != 'test@gmail.com') {
-            return back()->withErrors([
-                'error' => 'menten',
-            ]);
-        }
+        // if ($request->email != 'test@gmail.com') {
+        //     return back()->withErrors([
+        //         'error' => 'menten',
+        //     ])->withInput();
+        // }
 
         if (!$request->remember) {
             if (Auth::attempt($credentials)) {
@@ -41,7 +41,7 @@ class UserController extends Controller
 
             return back()->withErrors([
                 'error' => 'Username atau password salah',
-            ]);
+            ])->withInput();
         }else {
             if (Auth::attempt($credentials, $remember)) {
                 $request->session()->regenerate();
@@ -51,33 +51,33 @@ class UserController extends Controller
 
             return back()->withErrors([
                 'error' => 'Username atau password salah',
-            ]);
+            ])->withInput()->withInput();
         }
     }
 
     public function registerUser(Request $request)
     {
-        // $field = $request->validate([
-        //     'name' => 'required|string',
-        //     'email' => 'required|string|email|unique:users,email',
-        //     'password' => 'required|string|confirmed'
-        // ]);
+        $field = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users,email',
+            'password' => 'required|string|confirmed'
+        ])->withInput();
 
-        // $rand = Str::random(60);
-        // $user = User::create([
-        //     'name' => $field['name'],
-        //     'email' => $field['email'],
-        //     'password' => bcrypt($field['password']),
-        //     'remember_token' => $rand
-        // ]);
-
-        // Auth::login($user);
-
-        // return redirect('/absen');
-
-        return back()->withErrors([
-            'error' => 'menten',
+        $rand = Str::random(60);
+        $user = User::create([
+            'name' => $field['name'],
+            'email' => $field['email'],
+            'password' => bcrypt($field['password']),
+            'remember_token' => $rand
         ]);
+
+        Auth::login($user);
+
+        return redirect('/absen');
+
+        // return back()->withErrors([
+        //     'error' => 'menten',
+        // ])->withInput();
     }
 
     public function logout(Request $request)

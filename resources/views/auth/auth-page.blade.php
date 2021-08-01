@@ -84,7 +84,7 @@
                                             <div class="form-group row">
                                                 <div class="col-12">
                                                     <label>Email</label>
-                                                    <input type="email" class="form-control" id="login-username" name="email" required>
+                                                    <input type="email" class="form-control" id="login-username" name="email" value="{{old('email')}}" required>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -145,13 +145,13 @@
                                             <div class="form-group row">
                                                 <div class="col-12">
                                                     <label for="signup-username">Nama</label>
-                                                    <input type="text" class="form-control" id="signup-username" name="name" placeholder="eg: john_smith">
+                                                    <input type="text" class="form-control" id="signup-username" name="name" value="{{old('name')}}" placeholder="eg: john_smith">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-12">
                                                     <label for="signup-email">Email</label>
-                                                    <input type="email" class="form-control" id="signup-email" name="email" placeholder="eg: john@example.com">
+                                                    <input type="email" class="form-control" id="signup-email" name="email" value="{{old('email')}}" placeholder="eg: john@example.com">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
