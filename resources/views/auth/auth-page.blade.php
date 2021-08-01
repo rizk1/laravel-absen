@@ -41,7 +41,7 @@
             <main id="main-container">
 
                 <!-- Page Content -->
-                <div class="bg-body-dark bg-pattern" style="background-image: url('assets/media/various/bg-pattern-inverse.png');">
+                <div class="bg-body-dark bg-pattern">
                     <div class="row mx-0 justify-content-center">
                         <div class="hero-static col-lg-6 col-xl-4">
                             <div class="content content-full overflow-hidden">
