@@ -47,7 +47,7 @@ class AbsenController extends Controller
                 'msg' => 'warning',
             ]);
         }
-        
+
         //kalo telat absen pas pulang
         if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s') <= $fromMasuk) {
             return \response()->json([
@@ -90,6 +90,7 @@ class AbsenController extends Controller
                 $absen = Absen::create([
                     'id_user' => Auth::user()->id,
                     'jam_absen' => date('Y-m-d H:i:s'),
+                    'status' => 'tepat waktu',
                     'type' => 'pulang',
                     'long' => $request->long,
                     'lat' => $request->lat,
