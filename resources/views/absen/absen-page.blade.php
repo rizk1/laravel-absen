@@ -70,7 +70,7 @@ $("#absen").on('click', function(e) {
     var latitude = 0;
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(showPosition);
+        navigator.geolocation.getCurrentPosition(showPosition, showError);
     } 
 
     function showPosition(position) {
@@ -136,6 +136,36 @@ $("#absen").on('click', function(e) {
                 }
             },
         });
+    }
+
+    function showError(error) {
+        console.log(error)
+        switch(error.code) {
+            case error.PERMISSION_DENIED:
+            Swal.fire({
+                title: 'User denied the request for Geolocation.',
+                icon: 'warning'
+            })
+            break;
+            case error.POSITION_UNAVAILABLE:
+            Swal.fire({
+                title: 'Location information is unavailable.',
+                icon: 'warning'
+            })
+            break;
+            case error.TIMEOUT:
+            Swal.fire({
+                title: 'The request to get user location timed out.',
+                icon: 'warning'
+            })
+            break;
+            case error.UNKNOWN_ERROR:
+            Swal.fire({
+                title: 'An unknown error occurred.',
+                icon: 'warning'
+            })
+            break;
+        }
     }
 });
 </script>
