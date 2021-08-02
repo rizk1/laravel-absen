@@ -61,7 +61,7 @@ class UserController extends Controller
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users,email',
             'password' => 'required|string|confirmed'
-        ])->withInput();
+        ]);
 
         $rand = Str::random(60);
         $user = User::create([
