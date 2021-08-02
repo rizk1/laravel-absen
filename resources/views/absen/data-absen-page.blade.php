@@ -124,9 +124,6 @@ $(".map-show-data").on('click', function(e) {
     $.ajax({
         method: 'GET',
         url: "{{url('map-data')}}/" + dataId,
-        // data: {
-        //     _token: '{{ csrf_token() }}',
-        // },
         success: function(data) {
             if (data.msg == 'success') {
                 // console.log(data);
