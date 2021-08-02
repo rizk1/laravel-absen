@@ -108,7 +108,7 @@
 <script src="{{asset('assets/js/datatables/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('assets/js/datatables/dataTables.bootstrap4.min.js')}}"></script>
 <script src="{{asset('assets/js/be_tables_datatables.min.js')}}"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.12.15/dist/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
 <script>
 $(".map-show-data").on('click', function(e) {
@@ -135,13 +135,16 @@ $(".map-show-data").on('click', function(e) {
                 $('#modal-map').modal('show');
             } else {
                 // console.log(data);
-                swal({
+                Swal.fire({
                     title: data.alert,
                     type: data.type
                 });
             }
         },
     });
+});
+$(document).ajaxComplete(function(){
+    Swal.close();            
 });
 </script>
 @endsection

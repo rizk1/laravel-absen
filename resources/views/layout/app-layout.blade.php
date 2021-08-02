@@ -233,9 +233,6 @@
                     },
                 });
             });
-            $(document).ajaxComplete(function(){
-            
-            });
         </script>
     </body>
 </html>
