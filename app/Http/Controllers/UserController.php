@@ -26,11 +26,11 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        // if ($request->email != 'test@gmail.com') {
-        //     return back()->withErrors([
-        //         'error' => 'menten',
-        //     ])->withInput();
-        // }
+        if ($request->email != 'test@gmail.com') {
+            return back()->withErrors([
+                'error' => 'menten',
+            ])->withInput();
+        }
 
         if (!$request->remember) {
             if (Auth::attempt($credentials)) {
@@ -57,6 +57,10 @@ class UserController extends Controller
 
     public function registerUser(Request $request)
     {
+        return back()->withErrors([
+            'error' => 'menten',
+        ])->withInput();
+
         $field = $request->validate([
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users,email',
@@ -74,10 +78,6 @@ class UserController extends Controller
         Auth::login($user);
 
         return redirect('/absen');
-
-        // return back()->withErrors([
-        //     'error' => 'menten',
-        // ])->withInput();
     }
 
     public function logout(Request $request)
