@@ -220,6 +220,26 @@
         <script src="{{asset('assets/js/codebase.core.min.js')}}"></script>
         <script src="{{asset('assets/js/codebase.app.min.js')}}"></script>
         @yield('js')
+        @if ($message = Session::get('success-login'))
+        <script>
+        const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+                toast.addEventListener('mouseenter', Swal.stopTimer)
+                toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+            })
+
+            Toast.fire({
+            icon: 'success',
+            title: '{{$message}}'
+        })
+        </script>
+        @endif
         <script>
             $(document).ajaxStart(function(){
                 Swal.fire({

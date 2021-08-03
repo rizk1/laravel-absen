@@ -26,17 +26,17 @@ class UserController extends Controller
             'password' => ['required'],
         ]);
 
-        if ($request->email != 'test@gmail.com') {
-            return back()->withErrors([
-                'error' => 'menten',
-            ])->withInput();
-        }
+        // if ($request->email != 'test@gmail.com') {
+        //     return back()->withErrors([
+        //         'error' => 'menten',
+        //     ])->withInput();
+        // }
 
         if (!$request->remember) {
             if (Auth::attempt($credentials)) {
                 $request->session()->regenerate();
-    
-                return redirect()->intended('/absen');
+                
+                return redirect()->intended('/absen')->with(['success-login' => 'Berhasil Login!']);
             }
 
             return back()->withErrors([
@@ -46,7 +46,7 @@ class UserController extends Controller
             if (Auth::attempt($credentials, $remember)) {
                 $request->session()->regenerate();
     
-                return redirect()->intended('dashboard');
+                return redirect()->intended('/absen')->with(['success-login' => 'Berhasil Login!']);
             }
 
             return back()->withErrors([
@@ -57,9 +57,9 @@ class UserController extends Controller
 
     public function registerUser(Request $request)
     {
-        return back()->withErrors([
-            'error' => 'menten',
-        ])->withInput();
+        // return back()->withErrors([
+        //     'error' => 'menten',
+        // ])->withInput();
 
         $field = $request->validate([
             'name' => 'required|string',
@@ -77,7 +77,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/absen');
+        return redirect('/absen')->with(['success-login' => 'Berhasil Login!']);
     }
 
     public function logout(Request $request)
