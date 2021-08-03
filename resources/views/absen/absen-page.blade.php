@@ -11,6 +11,7 @@
         padding: 0 50px;
         background: #222;
         color: #eee;
+        font-size: 40px !important;
         text-align: center;
         border-radius: 15px;
         box-shadow: 0 0 7px #222;
@@ -31,11 +32,11 @@
 <div class="block">
     <div class="block-content">
         <div id="clock" class="clock">loading ...</div>
-        <div class="row justify-content-md-center">
-            <div class="col-md-2 text-center mb-20">
+        <div class="row justify-content-center">
+            <div class="col-md-2 col-4 text-center mb-20">
                 <button id="absen" class="btn btn-absen btn-block">Absen</button>
             </div>
-            <div class="col-md-2 text-center mb-20">
+            <div class="col-md-2 col-4 text-center mb-20">
                 <button id="izin" class="btn btn-absen btn-block">Izin</button>
             </div>
         </div>

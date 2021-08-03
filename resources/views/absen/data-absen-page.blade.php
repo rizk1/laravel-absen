@@ -27,54 +27,56 @@
     </div>
     <div class="block-content block-content-full">
         <!-- DataTables functionality is initialized with .js-dataTable-full-pagination class in js/pages/be_tables_datatables.min.js which was auto compiled from _es6/pages/be_tables_datatables.js -->
-        <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
-            <thead>
-                <tr>
-                    <th class="text-center"></th>
-                    <th>Nama</th>
-                    <th class="d-none d-sm-table-cell">Email</th>
-                    <th class="d-none d-sm-table-cell">Status</th>
-                    <th class="d-none d-sm-table-cell">Tipe</th>
-                    <th class="d-none d-sm-table-cell">Waktu Absen</th>
-                    <th class="d-none d-sm-table-cell">Tanggal</th>
-                    <th class="d-none d-sm-table-cell">Peta Absen</th>
-                    <th class="text-center" style="width: 15%;">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @php
-                    $no = 1;
-                @endphp
-                @foreach ($data as $absen)
-                <tr>
-                    <td class="text-center">{{$no++}}</td>
-                    <td class="font-w600">{{$absen->user->name}}</td>
-                    <td class="d-none d-sm-table-cell">{{$absen->user->email}}</td>
-                    @if ($absen->status == 'tepat waktu')
-                    <td class="d-none d-sm-table-cell">
-                        <span class="badge badge-success">Tepat Waktu</span>
-                    </td> 
-                    @endif
-                    @if ($absen->status == 'telat')
-                    <td class="d-none d-sm-table-cell">
-                        <span class="badge badge-danger">Terlambat</span>
-                    </td> 
-                    @endif
-                    <td class="d-none d-sm-table-cell">{{$absen->type}}</td>
-                    <td class="d-none d-sm-table-cell">{{$absen->jam_absen}}</td>
-                    <td class="d-none d-sm-table-cell">{{$absen->tanggal}}</td>
-                    <td class="d-none d-sm-table-cell">
-                        <button type="button" class="btn btn-alt-info map-show-data" data-id="{{$absen->id}}">Lihat Detail</button>
-                    </td>
-                    <td class="text-center">
-                        <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
-                            <i class="fa fa-user"></i>
-                        </button>
-                    </td>
-                </tr> 
-                @endforeach
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-vcenter js-dataTable-full-pagination">
+                <thead>
+                    <tr>
+                        <th class="text-center"></th>
+                        <th>Nama</th>
+                        <th class="d-none d-sm-table-cell">Email</th>
+                        <th class="d-none d-sm-table-cell">Status</th>
+                        <th class="d-none d-sm-table-cell">Tipe</th>
+                        <th class="d-none d-sm-table-cell">Waktu Absen</th>
+                        <th class="d-none d-sm-table-cell">Tanggal</th>
+                        <th class="d-none d-sm-table-cell">Peta Absen</th>
+                        <th class="text-center" style="width: 15%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php
+                        $no = 1;
+                    @endphp
+                    @foreach ($data as $absen)
+                    <tr>
+                        <td class="text-center">{{$no++}}</td>
+                        <td class="font-w600">{{$absen->user->name}}</td>
+                        <td class="d-sm-table-cell">{{$absen->user->email}}</td>
+                        @if ($absen->status == 'tepat waktu')
+                        <td class="d-sm-table-cell">
+                            <span class="badge badge-success">Tepat Waktu</span>
+                        </td> 
+                        @endif
+                        @if ($absen->status == 'telat')
+                        <td class="d-sm-table-cell">
+                            <span class="badge badge-danger">Terlambat</span>
+                        </td> 
+                        @endif
+                        <td class="d-sm-table-cell">{{$absen->type}}</td>
+                        <td class="d-sm-table-cell">{{$absen->jam_absen}}</td>
+                        <td class="d-sm-table-cell">{{$absen->tanggal}}</td>
+                        <td class="d-sm-table-cell">
+                            <button type="button" class="btn btn-alt-info map-show-data" data-id="{{$absen->id}}">Lihat Detail</button>
+                        </td>
+                        <td class="text-center">
+                            <button type="button" class="btn btn-sm btn-secondary" data-toggle="tooltip" title="View Customer">
+                                <i class="fa fa-user"></i>
+                            </button>
+                        </td>
+                    </tr> 
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
