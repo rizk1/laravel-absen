@@ -36,6 +36,7 @@ $(".pays").on('click', function(e) {
         success: function(result) {
             console.log(result);
             window.snap.pay(result.token,{
+                language : 'id',
                 onSuccess: function(result){
                     console.log(result);
                 },

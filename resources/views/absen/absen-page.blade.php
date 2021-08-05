@@ -81,6 +81,7 @@ $(".pays").on('click', function(e) {
             console.log(result);
             Swal.close();
             window.snap.pay(result.token,{
+                language : 'id',
                 onSuccess: function(result){
                     console.log(result);
                 },
