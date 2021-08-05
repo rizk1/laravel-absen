@@ -4,6 +4,7 @@ use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\DataAbsenController;
 use App\Http\Controllers\DetailUserController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -47,5 +48,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::get('/map-data/{id}', [DataAbsenController::class, 'showMap']);
 
     Route::get('/detail-user/{id}', [DetailUserController::class, 'index']);
+
+    Route::get('/payment', [PaymentController::class, 'index']);
+    Route::post('/payment', [PaymentController::class, 'payment']);
 });
 
