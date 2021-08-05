@@ -28,7 +28,6 @@
 
 @section('content')
 <h2 class="content-heading">Absensi</h2>
-
 <div class="block">
     <div class="block-content">
         <div id="clock" class="clock">loading ...</div>
@@ -42,6 +41,17 @@
         </div>
     </div>
 </div>
+
+<h2 class="content-heading">Testing Midtrans</h2>
+<div class="block">
+    <div class="block-content">
+        <div class="row justify-content-center">
+            <div class="col-md-2 col-4 text-center mb-20">
+                <button id="absen" class="btn btn-absen btn-block pays">Bayar</button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('js')
@@ -49,6 +59,42 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/FitText.js/1.1/jquery.fittext.min.js"></script>
 <script src="https://momentjs.com/downloads/moment.js"></script>
+<script type="text/javascript"src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="SB-Mid-client-i0cQaNLjOAbsIIl8"></script>
+<script>
+$(".pays").on('click', function(e) {
+    e.preventDefault();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    // var dataId = $(this).attr('data-id');
+    // console.log(dataId)
+    $.ajax({
+        method: 'POST',
+        url: "{{url('payment')}}/",
+        data: {
+            _token: '{{ csrf_token() }}',
+        },
+        success: function(result) {
+            console.log(result);
+            Swal.close();
+            window.snap.pay(result.token,{
+                onSuccess: function(result){
+                    console.log(result);
+                },
+                onPending: function(result){
+                    console.log(result);
+                },
+                onError: function(result){
+                    console.log(result);
+                }
+            });
+        },
+    });
+});
+</script>
 <script>
 $( document ).ready(function() {
     $('#clock').fitText(1.3);
