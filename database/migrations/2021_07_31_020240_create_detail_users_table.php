@@ -15,8 +15,7 @@ class CreateDetailUsersTable extends Migration
     {
         Schema::create('detail_users', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->longText('alamat');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->longText('avatar');
             $table->timestamps();
         });

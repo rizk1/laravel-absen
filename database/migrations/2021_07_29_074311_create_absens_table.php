@@ -15,10 +15,11 @@ class CreateAbsensTable extends Migration
     {
         Schema::create('absens', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_user');
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->dateTime('jam_absen');
             $table->enum('type', ['masuk', 'pulang']);
             $table->enum('status', ['tepat waktu', 'telat']);
+            $table->foreignId('shift_id')->nullable()->constrained('shifts')->onDelete('set null');
             $table->double('long');
             $table->double('lat');
             $table->date('tanggal');

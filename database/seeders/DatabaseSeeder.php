@@ -3,6 +3,9 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Jabatan;
+use App\Models\Shift;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,6 +16,19 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // \App\Models\User::factory(10)->create();
+        // Buat data jabatan
+        Jabatan::create(['jabatan' => 'Admin']);
+        Jabatan::create(['jabatan' => 'Gateway Operator']);
+        Jabatan::create(['jabatan' => '1 Non Shift']);
+
+        // Buat data shift
+        Shift::create(['shift' => 'Non Shift', 'mulai' => '09:00', 'selesai' => '18:00']);
+        Shift::create(['shift' => 'Shift 1', 'mulai' => '07:00', 'selesai' => '15:00']);
+        Shift::create(['shift' => 'Shift 2', 'mulai' => '15:00', 'selesai' => '23:00']);
+        Shift::create(['shift' => 'Shift 3', 'mulai' => '23:00', 'selesai' => '07:00']);
+
+        User::factory()->gatewayOperatorShift2()->create();
+        User::factory()->nonShiftUser()->create();
+        User::factory()->adminNonShift()->create();
     }
 }

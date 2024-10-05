@@ -3,8 +3,12 @@
 use App\Http\Controllers\AbsenController;
 use App\Http\Controllers\DataAbsenController;
 use App\Http\Controllers\DetailUserController;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ShiftController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -26,30 +30,39 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/auth', [UserController::class, 'index']);
+Route::get('/auth', [AuthController::class, 'index']);
 Route::get('/login', function () {
     return redirect('auth?action=login');
 });
-Route::post('/login', [UserController::class, 'loginUser']);
+    Route::post('/login', [AuthController::class, 'loginUser']);
 Route::get('/register', function () {
     return redirect('auth?action=register');
 });
-Route::post('/register', [UserController::class, 'registerUser']);
-Route::get('/logout', [UserController::class, 'logout']);
+Route::post('/register', [AuthController::class, 'registerUser']);
+Route::get('/logout', [AuthController::class, 'logout']);
 
 Route::group(['middleware' => ['auth']], function() {
     Route::get('/', function () {
         return view('layout.app-layout');
     });
-    Route::get('/absen', [AbsenController::class, 'index']);
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/absen', [AbsenController::class, 'index'])->name('absen');
     Route::post('/absen', [AbsenController::class, 'absen']);
     Route::post('/absen-telat', [AbsenController::class, 'absenTelat']);
-    Route::get('/data-absen', [DataAbsenController::class, 'index']);
+    
+    Route::get('/data-absen', [DataAbsenController::class, 'index'])->name('data-absen');
     Route::get('/map-data/{id}', [DataAbsenController::class, 'showMap']);
+    Route::get('/download-absen-pdf', [DataAbsenController::class, 'downloadPdf'])->name('download-absen-pdf');
 
-    Route::get('/detail-user/{id}', [DetailUserController::class, 'index']);
+    Route::get('/detail-user', [DetailUserController::class, 'index'])->name('detail-user');
+    Route::post('/user/{id}', [DetailUserController::class, 'saveOrUpdate'])->name('user.saveOrUpdate');
 
-    Route::get('/payment', [PaymentController::class, 'index']);
-    Route::post('/payment', [PaymentController::class, 'payment']);
+
+    Route::group(['middleware' => ['admin']], function() {
+        Route::resource('shift', ShiftController::class);
+        Route::resource('users', UserController::class);
+        Route::resource('jabatan', JabatanController::class);
+        Route::delete('/delete-absen/{id}', [DataAbsenController::class, 'destroy'])->name('delete-absen');
+    });
 });
 

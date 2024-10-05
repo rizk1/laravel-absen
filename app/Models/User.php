@@ -20,6 +20,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'jabatan_id',
+        'shift_id'
     ];
 
     /**
@@ -40,4 +42,19 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class, 'shift_id');
+    }
+
+    public function detailUser()
+    {
+        return $this->hasOne(DetailUser::class, 'user_id');
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class, 'jabatan_id');
+    }
 }

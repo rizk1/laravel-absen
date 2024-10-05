@@ -10,10 +10,11 @@ class Absen extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_user',
+        'user_id',
         'jam_absen',
         'type',
         'status',
+        'shift_id',
         'tanggal',
         'long',
         'lat'
@@ -21,6 +22,11 @@ class Absen extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'id_user', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function shift()
+    {
+        return $this->belongsTo(Shift::class, 'shift_id', 'id');
     }
 }
