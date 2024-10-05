@@ -3,180 +3,102 @@
 namespace App\Http\Controllers;
 
 use App\Models\Absen;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 
 class AbsenController extends Controller
 {
     public function index()
     {
-        return view('absen.absen-page');
+        $user = User::with('shift')->findOrFail(Auth::id());
+        return view('absen.absen-page', compact('user'));
     }
 
     public function absen(Request $request)
     {
         if (!Auth::check()) {
-            return \response()->json([
-                'msg' => 'failed',
-                'alert' => 'Session expired',
-                'type' => 'error'
-
-            ]);
-        }
-        //absen mulai masuk
-        $fromMasuk = date('Y-m-d 06:00:00');
-        $toMasuk = date('Y-m-d 09:00:00');
-        //
-
-        //absen mulai pulang
-        $fromPulang = date('Y-m-d 16:00:00');
-        $toPulang = date('Y-m-d 20:00:00');
-        //
-
-        // return \response()->json([
-        //     'time' => date('Y-m-d H:i:s'); 
-        // ]);
-
-        $cekMasuk = Absen::where('type', 'masuk')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-        $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-
-        if ($cekMasuk || $cekPulang) {
-            return \response()->json([
-                'msg' => 'failed',
-                'alert' => 'Anda Sudah Absen',
-                'type' => 'warning'
-            ]);
+            return $this->jsonResponse('failed', 'Session expired', 'error');
         }
 
-        if (date('Y-m-d H:i:s') >= $fromMasuk && date('Y-m-d H:i:s') <= $toMasuk) {
-            if (!$cekMasuk) {
-                $jam = date('Y-m-d H:i:s');
-                $absen = Absen::create([
-                    'id_user' => Auth::user()->id,
-                    'jam_absen' => $jam,
-                    'type' => 'masuk',
-                    'status' => 'tepat waktu',
-                    'long' => $request->long,
-                    'lat' => $request->lat,
-                    'tanggal' => $jam
-                ]);
-
-                return \response()->json([
-                    'msg' => 'success',
-                    'alert' => 'Berhasil absen',
-                    'text' => 'Anda berhasil melakukan absen masuk',
-                    'type' => 'success'
-                ]);
-            }else {
-                return \response()->json([
-                    'msg' => 'failed',
-                    'alert' => 'Anda sudah absen',
-                    'text' => 'Anda sudah melakukan absen masuk',
-                    'type' => 'warning'
-                ]);
-            }
-        }
-
-        if (date('Y-m-d H:i:s') >= $fromPulang && date('Y-m-d H:i:s') <= $toPulang) {
-            if (!$cekPulang) {
-                $absen = Absen::create([
-                    'id_user' => Auth::user()->id,
-                    'jam_absen' => date('Y-m-d H:i:s'),
-                    'status' => 'tepat waktu',
-                    'type' => 'pulang',
-                    'long' => $request->long,
-                    'lat' => $request->lat,
-                    'tanggal' => date('Y-m-d')
-                ]);
-
-                return \response()->json([
-                    'msg' => 'success',
-                    'alert' => 'Berhasil absen pulang',
-                    'type' => 'success'
-                ]);
-            }else {
-                return \response()->json([
-                    'msg' => 'failed',
-                    'alert' => 'Sudah absen pulang',
-                    'type' => 'warning'
-                ]);
-            }
-        }
-
-        //kalo telat absen pas masuk
-        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromPulang) {
-            return \response()->json([
-                'msg' => 'warning',
-            ]);
-        }
-
-        //kalo telat absen pas pulang
-        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromMasuk) {
-            return \response()->json([
-                'msg' => 'warning',
-            ]);
+        $user = User::with('shift')->findOrFail(Auth::id());
+        $now = Carbon::now();
         
+        $shiftStart = Carbon::parse($user->shift->mulai);
+        $shiftEnd = Carbon::parse($user->shift->selesai);
+
+        if ($this->hasAbsenToday('masuk') && $this->hasAbsenToday('pulang')) {
+            return $this->jsonResponse('failed', 'Anda Sudah Absen Masuk dan Pulang', 'warning');
         }
+
+        $absenType = $this->determineAbsenType($now, $shiftStart, $shiftEnd);
+
+        if ($absenType === 'masuk' && $this->hasAbsenToday('masuk')) {
+            return $this->jsonResponse('failed', 'Anda Sudah Absen Masuk', 'warning');
+        }
+
+        if ($absenType === 'pulang' && !$this->hasAbsenToday('masuk')) {
+            return $this->jsonResponse('failed', 'Anda belum absen masuk hari ini', 'warning');
+        }
+
+        $status = $this->determineAbsenStatus($now, $absenType, $shiftStart, $shiftEnd);
+        $message = $this->createAbsen($request, $absenType, $user->shift->id, $status);
+        return $this->jsonResponse('success', $message, 'success', $message);
     }
 
-    public function absenTelat(Request $request)
+    private function determineAbsenType($now, $shiftStart, $shiftEnd)
     {
-        //absen mulai masuk
-        $fromMasuk = date('Y-m-d 06:00:00');
-        $toMasuk = date('Y-m-d 09:00:00');
-        //
-
-        //absen mulai pulang
-        $fromPulang = date('Y-m-d 16:00:00');
-        $toPulang = date('Y-m-d 20:00:00');
-        //
-
-        $cekMasuk = Absen::where('type', 'masuk')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-        $cekPulang = Absen::where('type', 'pulang')->where('tanggal', date('Y-m-d'))->where('id_user', Auth::user()->id)->first();
-
-        //kalo telat absen pas masuk
-        if (date('Y-m-d H:i:s') >= $toMasuk && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromPulang) {
-            $type = 'masuk';
+        if (!$this->hasAbsenToday('masuk')) {
+            return 'masuk';
+        } elseif (!$this->hasAbsenToday('pulang')) {
+            return 'pulang';
         }
-        //kalo telat absen pas pulang
-        if (date('Y-m-d H:i:s') >= $toPulang && date('Y-m-d H:i:s', strtotime(date('Y-m-d H:i:s + 1 days'))) <= $fromMasuk) {
-            $type = 'pulang';
-        
-        }
-        
-        if ($cekMasuk || $cekPulang) {
-            return \response()->json([
-                'msg' => 'failed',
-                'alert' => 'Anda Sudah Absen',
-                'type' => 'warning'
-            ]);
-        }
+        return null;
+    }
 
-        if ($request->isTelat == 1) {
-            $jam = date('Y-m-d H:i:s');
-            $absen = Absen::create([
-                'id_user' => Auth::user()->id,
-                'jam_absen' => $jam,
-                'type' => $type,
-                'status' => 'telat',
-                'long' => $request->long,
-                'lat' => $request->lat,
-                'tanggal' => $jam
-            ]);
+    private function determineAbsenStatus($now, $type, $shiftStart, $shiftEnd)
+    {
+        if ($type === 'masuk') {
+            return $now->lte($shiftStart) ? 'tepat waktu' : 'telat';
+        } elseif ($type === 'pulang') {
+            return $now->gte($shiftEnd) ? 'tepat waktu' : 'pulang awal';
+        }
+        return 'tidak valid';
+    }
 
-            return \response()->json([
-                'msg' => 'success',
-                'alert' => 'Anda berhasil absen',
-                'type' => 'success'
-            ]);
-        }else {
-            return \response()->json([
-                'msg' => 'failed',
-                'alert' => 'Terjadi kesalahan',
-                'type' => 'error'
-            ]);
+    private function createAbsen(Request $request, $type, $shiftId, $status)
+    {
+        $now = Carbon::now();
+        $absen = Absen::create([
+            'user_id' => Auth::id(),
+            'jam_absen' => $now,
+            'type' => $type,
+            'status' => $status,
+            'shift_id' => $shiftId,
+            'long' => $request->long,
+            'lat' => $request->lat,
+            'tanggal' => $now->toDateString()
+        ]);
+
+        $message = "Berhasil absen $type";
+        if ($status === 'telat') {
+            $message .= ". Anda telat absen!";
         }
 
+        return $message;
+    }
+
+    private function hasAbsenToday($type)
+    {
+        return Absen::where('type', $type)
+                    ->whereDate('tanggal', Carbon::today())
+                    ->where('user_id', Auth::id())
+                    ->exists();
+    }
+
+    private function jsonResponse($msg, $alert, $type, $text = null)
+    {
+        return response()->json(compact('msg', 'alert', 'type', 'text'));
     }
 }
