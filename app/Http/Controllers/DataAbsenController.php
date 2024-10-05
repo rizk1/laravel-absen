@@ -20,7 +20,7 @@ class DataAbsenController extends Controller
                 ? Absen::with('user', 'shift')->orderBy('created_at', 'asc')
                 : Absen::with('user', 'shift')->where('user_id', auth()->id())->orderBy('created_at', 'asc');
 
-            if ($request->has('user_id') && $request->user_id != '' && $request->user_id != 'all') {
+            if ($isAdmin && $request->has('user_id') && $request->user_id != '' && $request->user_id != 'all') {
                 $data->where('user_id', $request->user_id);
             }
 
@@ -53,7 +53,7 @@ class DataAbsenController extends Controller
         }
 
         $isAdmin = auth()->user()->jabatan_id === 1;
-        $users = $isAdmin ? User::all() : User::where('id', auth()->id())->get();
+        $users = $isAdmin ? User::all() : collect([auth()->user()]);
         $data = $isAdmin 
             ? Absen::with('user', 'shift')->latest()->get()
             : Absen::with('user', 'shift')->where('user_id', auth()->id())->latest()->get();

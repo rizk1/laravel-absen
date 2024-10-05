@@ -71,7 +71,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Laporan Absensi Karyawan</h1>
+            <h1 style="font-size: 24px;">Absensi Karyawan Infracom Telesarana</h1>
         </div>
 
         <div class="info">

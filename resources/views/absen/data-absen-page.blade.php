@@ -47,12 +47,14 @@
         <div class="card-header">
         <h4>Data Absen</h4>
         <div class="card-header-action">
+            @if(Auth::user()->jabatan_id == 1)
             <select id="user-filter" class="form-control">
                 <option value="all">Semua User</option>
                 @foreach($users as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>
+            @endif
             <a href="{{ route('download-absen-pdf') }}" class="btn btn-primary" id="download-pdf">Download PDF</a>
         </div>
         </div>
@@ -112,6 +114,7 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script>
 $(document).ready(function() {
+    @if(Auth::user()->jabatan_id == 1)
     // Initialize Select2 with delay
     setTimeout(function() {
         $('#user-filter').select2({
@@ -120,6 +123,7 @@ $(document).ready(function() {
         });
         console.log("Select2 initialized successfully");
     }, 500);
+    @endif
 
     var table = $('#tabelAbsen').DataTable({
         processing: true,
@@ -127,7 +131,9 @@ $(document).ready(function() {
         ajax: {
             url: "{{ route('data-absen') }}",
             data: function (d) {
+                @if(Auth::user()->jabatan_id == 1)
                 d.user_id = $('#user-filter').val();
+                @endif
             }
         },
         columns: [
@@ -166,6 +172,7 @@ $(document).ready(function() {
         ]
     });
 
+    @if(Auth::user()->jabatan_id == 1)
     // Handle Select2 change event
     $('#user-filter').on('change', function(){
         table.ajax.reload();
@@ -173,7 +180,6 @@ $(document).ready(function() {
 
     $('#download-pdf').click(function(e){
         e.preventDefault();
-        var userId = $('#user-filter').val();
         var url = "{{ route('download-absen-pdf') }}";
         if(userId && userId !== 'all') {
             url += '?user_id=' + userId;
@@ -259,6 +265,7 @@ $(document).ready(function() {
             }
         });
     });
+    @endif
 });
 </script>
 @endsection
