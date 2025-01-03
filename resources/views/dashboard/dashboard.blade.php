@@ -75,6 +75,21 @@
     </div>
     <div class="col-lg-{{ $isAdmin ? '3' : '4' }} col-md-6 col-sm-6 col-12">
         <div class="card card-statistic-1">
+            <div class="card-icon bg-success">
+                <i class="fas fa-fingerprint"></i>
+            </div>
+            <div class="card-wrap">
+                <div class="card-header">
+                    <h4>Absen Lembur</h4>
+                </div>
+                <div class="card-body">
+                    {{ $filter == 'today' ? $absenPulang : $totalAllDays['lembur'] }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-{{ $isAdmin ? '3' : '4' }} col-md-6 col-sm-6 col-12">
+        <div class="card card-statistic-1">
             <div class="card-icon bg-warning">
                 <i class="fas fa-fingerprint"></i>
             </div>

@@ -59,18 +59,6 @@
                     <p>{{ $user->jabatan->jabatan }}</p>
                   @endif
               </div>
-              <div class="form-group mb-3">
-                <label>Shift</label>
-                @if($isEditing)
-                  <select name="shift" class="form-control form-control-sm">
-                    @foreach ($shift as $item)
-                        <option value="{{ $item->id }}" {{ ($user && $user->shift_id == $item->id) ? 'selected' : '' }}>{{ $item->shift }}</option>
-                    @endforeach
-                  </select>
-                @else
-                  <p>{{ $user->shift->shift }}</p>
-                @endif
-              </div>
               @if(!$isEditing)
                 <div class="form-group mb-3">
                   <label>Absen Terakhir</label>

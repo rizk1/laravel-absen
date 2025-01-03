@@ -10,6 +10,7 @@
             margin: 0;
             padding: 0;
             color: #333;
+            font-size: 12px;
         }
         .container {
             width: 100%;
@@ -38,7 +39,7 @@
         }
         th, td {
             border: 1px solid #ddd;
-            padding: 12px;
+            padding: 15px;
             text-align: left;
         }
         th {
@@ -89,7 +90,6 @@
                 <tr>
                     <th>Nama</th>
                     <th>Email</th>
-                    <th>Status</th>
                     <th>Tipe</th>
                     <th>Shift</th>
                     <th>Waktu Absen</th>
@@ -101,7 +101,6 @@
                 <tr>
                     <td>{{ $absen->user->name }}</td>
                     <td>{{ $absen->user->email }}</td>
-                    <td class="status-{{ strtolower($absen->status) }}">{{ $absen->status }}</td>
                     <td>{{ $absen->type }}</td>
                     <td>{{ $absen->shift->shift }}</td>
                     <td>{{ $absen->jam_absen }}</td>

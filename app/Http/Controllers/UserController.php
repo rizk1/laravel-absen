@@ -77,12 +77,15 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
+        // Log the entire request for debugging
+        \Log::info('Update User Request:', $request->all());
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:6',
-            'jabatan' => 'required|string|max:255',
-            'shift' => 'required|string|in:pagi,siang,malam',
+            'jabatan' => 'required',
+            'shift' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 

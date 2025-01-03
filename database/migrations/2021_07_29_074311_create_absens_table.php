@@ -17,8 +17,7 @@ class CreateAbsensTable extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('set null');
             $table->dateTime('jam_absen');
-            $table->enum('type', ['masuk', 'pulang']);
-            $table->enum('status', ['tepat waktu', 'telat']);
+            $table->enum('type', ['masuk', 'lembur', 'pulang']);
             $table->foreignId('shift_id')->nullable()->constrained('shifts')->onDelete('set null');
             $table->double('long');
             $table->double('lat');

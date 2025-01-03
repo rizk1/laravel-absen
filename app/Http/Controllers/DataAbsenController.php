@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Absen;
 use App\Models\User;
+use App\Models\Shift;
 use Yajra\DataTables\Facades\DataTables;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
@@ -26,16 +27,14 @@ class DataAbsenController extends Controller
 
             return DataTables::of($data)
             ->addIndexColumn()
-            ->addColumn('status_badge', function($absen) {
-                if ($absen->status == 'tepat waktu') {
-                    return '<span class="badge badge-success">Tepat Waktu</span>';
-                } elseif ($absen->status == 'telat') {
-                    return '<span class="badge badge-danger">Terlambat</span>';
+            ->addColumn('type', function($absen) {
+                if($absen->type == 'masuk' && $absen->jam_absen > Shift::find($absen->shift_id)->jam_mulai) {
+                    return 'Masuk (Telat)';
                 }
-                return '';
+                return ucfirst($absen->type);
             })
             ->addColumn('map_button', function($absen) {
-                return '<button type="button" class="btn btn-alt-info map-show-data" data-id="'.$absen->id.'">Lihat Detail</button>';
+                return '<button type="button" class="btn btn-alt-info map-show-data" id="map-'.$absen->id.'" data-id="'.$absen->id.'">Lihat Detail</button>';
             })
             ->addColumn('action', function($absen) {
                 $userButton = '<a href="'.route('detail-user', $absen->user->id).'">
@@ -113,14 +112,21 @@ class DataAbsenController extends Controller
             : Absen::with('user', 'shift')->where('user_id', auth()->id())->orderBy('created_at', 'desc');
 
         $selectedUserId = $request->user_id;
-        $selectedUser = null;
+        $selectedUser = $isAdmin ? null : User::find(auth()->user()->id);
 
         if ($selectedUserId && $selectedUserId != 'all') {
             $query->where('user_id', $selectedUserId);
             $selectedUser = User::find($selectedUserId);
         }
 
-        $data = $query->get();
+        $data = $query->get()->map(function($absen) {
+            if($absen->type == 'masuk' && $absen->jam_absen > Shift::find($absen->shift_id)->jam_mulai) {
+                $absen->type = 'Masuk (Telat)';
+            } else {
+                $absen->type = ucfirst($absen->type);
+            }
+            return $absen;
+        });
 
         $pdf = PDF::loadView('absen.pdf-report', compact('data', 'selectedUser'));
         
