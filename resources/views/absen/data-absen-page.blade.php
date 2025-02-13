@@ -66,7 +66,6 @@
                         <th class="text-center"></th>
                         <th>Nama</th>
                         <th class="d-none d-sm-table-cell">Email</th>
-                        <th class="d-none d-sm-table-cell">Status</th>
                         <th class="d-none d-sm-table-cell">Tipe</th>
                         <th class="d-none d-sm-table-cell">Shift</th>
                         <th class="d-none d-sm-table-cell">Waktu Absen</th>
@@ -140,7 +139,6 @@ $(document).ready(function() {
             {data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false},
             {data: 'user.name', name: 'user.name'},
             {data: 'user.email', name: 'user.email'},
-            {data: 'status_badge', name: 'status', orderable: false, searchable: false},
             {data: 'type', name: 'type'},
             {data: 'shift.shift', name: 'shift.shift'},
             {data: 'jam_absen', name: 'jam_absen'},
@@ -172,21 +170,6 @@ $(document).ready(function() {
         ]
     });
 
-    @if(Auth::user()->jabatan_id == 1)
-    // Handle Select2 change event
-    $('#user-filter').on('change', function(){
-        table.ajax.reload();
-    });
-
-    $('#download-pdf').click(function(e){
-        e.preventDefault();
-        var url = "{{ route('download-absen-pdf') }}";
-        if(userId && userId !== 'all') {
-            url += '?user_id=' + userId;
-        }
-        window.location.href = url;
-    });
-
     $(document).on('click', '.map-show-data', function(e) {
         e.preventDefault();
         $.ajaxSetup({
@@ -215,6 +198,21 @@ $(document).ready(function() {
                 }
             },
         });
+    });
+
+    @if(Auth::user()->jabatan_id == 1)
+    // Handle Select2 change event
+    $('#user-filter').on('change', function(){
+        table.ajax.reload();
+    });
+
+    $('#download-pdf').click(function(e){
+        e.preventDefault();
+        var url = "{{ route('download-absen-pdf') }}";
+        if(userId && userId !== 'all') {
+            url += '?user_id=' + userId;
+        }
+        window.location.href = url;
     });
     
     $(document).on('click', '.delete-absen', function(e) {

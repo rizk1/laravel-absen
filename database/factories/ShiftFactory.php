@@ -24,7 +24,7 @@ class ShiftFactory extends Factory
         return [
             'shift' => $this->faker->randomElement(['Shift 1', 'Shift 2', 'Shift 3', 'Non Shift']),
             'mulai' => $this->faker->randomElement(['07:00', '15:00', '23:00', '09:00']),
-            'selesai' => $this->faker->randomElement(['15:00', '23:00', '07:00', '06:00']),
+            'selesai' => $this->faker->randomElement(['15:00', '23:00', '07:00', '18:00']),
         ];
     }
 }

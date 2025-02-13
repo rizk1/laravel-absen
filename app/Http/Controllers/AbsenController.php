@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use App\Models\Absen;
 use App\Models\User;
+use App\Models\Shift;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class AbsenController extends Controller
 {
     public function index()
     {
         $user = User::with('shift')->findOrFail(Auth::id());
-        return view('absen.absen-page', compact('user'));
+        $shift = Shift::where(function ($query) use ($user) {
+            if ($user->jabatan_id !== 3) {
+                $query->whereIn('shift', ['Shift 1', 'Shift 2', 'Shift 3']);
+            } else {
+                $query->where('shift', 'Non Shift');
+            }
+        })->get();
+        return view('absen.absen-page', compact('user', 'shift'));
     }
 
     public function absen(Request $request)
@@ -22,83 +31,115 @@ class AbsenController extends Controller
             return $this->jsonResponse('failed', 'Session expired', 'error');
         }
 
-        $user = User::with('shift')->findOrFail(Auth::id());
+        $shiftId = $request->shift;
         $now = Carbon::now();
-        
-        $shiftStart = Carbon::parse($user->shift->mulai);
-        $shiftEnd = Carbon::parse($user->shift->selesai);
 
-        if ($this->hasAbsenToday('masuk') && $this->hasAbsenToday('pulang')) {
-            return $this->jsonResponse('failed', 'Anda Sudah Absen Masuk dan Pulang', 'warning');
+        // Ambil shift yang dipilih dari tabel shift
+        $shift = Shift::findOrFail($shiftId);
+
+        // Cek apakah sudah ada absen masuk untuk hari ini
+        $activeShift = Absen::where('user_id', Auth::id())
+            ->where('type', 'masuk')
+            ->whereDate('tanggal', Carbon::today())
+            ->where('shift_id', $shiftId) // Pastikan shift yang dipilih sesuai
+            ->first();
+
+        // Cek apakah shift sebelumnya sudah selesai (absen pulang atau lembur)
+        $completedShift = Absen::where('user_id', Auth::id())
+            ->whereDate('tanggal', Carbon::today())
+            ->whereIn('type', ['pulang', 'lembur'])
+            ->first();
+
+        // Jika sudah ada absen masuk untuk shift ini, bisa absen pulang atau lembur
+        if ($activeShift) {
+            // Cek jika tipe absen adalah pulang dan belum ada absen pulang untuk shift ini
+            if ($request->tipeAbsen == 'pulang') {
+                $absenPulang = Absen::where('user_id', Auth::id())
+                    ->where('type', 'pulang')
+                    ->whereDate('tanggal', Carbon::today())
+                    ->where('shift_id', $shiftId)
+                    ->first();
+
+                // Jika sudah absen pulang, beri pesan bahwa sudah selesai shift ini
+                if ($absenPulang) {
+                    return $this->jsonResponse('failed', 'Anda sudah absen pulang untuk shift ini.', 'warning');
+                }
+
+                // Jika belum ada absen pulang, lakukan absen pulang
+                $message = $this->createAbsen($request, 'pulang', $shiftId);
+                return $this->jsonResponse('success', $message, 'success', $message);
+            }
+
+            // Cek jika tipe absen adalah lembur dan belum ada absen lembur untuk shift ini
+            if ($request->tipeAbsen == 'lembur' && !$this->hasAbsenToday('lembur', $shiftId)) {
+                $message = $this->createAbsen($request, 'lembur', $shiftId);
+                return $this->jsonResponse('success', $message, 'success', $message);
+            }
+
+            // Jika tipe absen tidak sesuai
+            return $this->jsonResponse('failed', 'Tipe absen tidak valid atau tidak diizinkan.', 'warning');
         }
 
-        $absenType = $this->determineAbsenType($now, $shiftStart, $shiftEnd);
+        // Cek jika shift sebelumnya sudah selesai (absen pulang atau lembur), maka pengguna bisa melakukan absen masuk ke shift baru
+        if ($completedShift) {
+            // Pastikan shift yang baru belum ada absen masuk
+            $absenMasuk = Absen::where('user_id', Auth::id())
+                ->where('type', 'masuk')
+                ->whereDate('tanggal', Carbon::today())
+                ->where('shift_id', $shiftId)
+                ->first();
 
-        if ($absenType === 'masuk' && $this->hasAbsenToday('masuk')) {
-            return $this->jsonResponse('failed', 'Anda Sudah Absen Masuk', 'warning');
+            // Jika belum ada absen masuk untuk shift ini, lanjutkan absen masuk
+            if (!$absenMasuk) {
+                // Lakukan absen masuk untuk shift ini
+                $message = $this->createAbsen($request, 'masuk', $shiftId);
+                return $this->jsonResponse('success', $message, 'success', $message);
+            } else {
+                return $this->jsonResponse('failed', 'Anda sudah absen masuk untuk shift ini.', 'warning');
+            }
         }
 
-        if ($absenType === 'pulang' && !$this->hasAbsenToday('masuk')) {
-            return $this->jsonResponse('failed', 'Anda belum absen masuk hari ini', 'warning');
+        // Jika belum ada absen masuk dan shift sebelumnya belum selesai, maka kita bisa absen masuk ke shift pertama
+        if (!$completedShift && $request->tipeAbsen == 'masuk') {
+            $message = $this->createAbsen($request, 'masuk', $shiftId);
+            return $this->jsonResponse('success', $message, 'success', $message);
         }
 
-        $status = $this->determineAbsenStatus($now, $absenType, $shiftStart, $shiftEnd);
-        $message = $this->createAbsen($request, $absenType, $user->shift->id, $status);
-        return $this->jsonResponse('success', $message, 'success', $message);
+        // Jika tidak ada kondisi yang cocok, beri pesan gagal
+        return $this->jsonResponse('failed', 'Tipe absen tidak valid atau tidak diizinkan.', 'warning');
     }
 
-    private function determineAbsenType($now, $shiftStart, $shiftEnd)
-    {
-        if (!$this->hasAbsenToday('masuk')) {
-            return 'masuk';
-        } elseif (!$this->hasAbsenToday('pulang')) {
-            return 'pulang';
-        }
-        return null;
-    }
-
-    private function determineAbsenStatus($now, $type, $shiftStart, $shiftEnd)
-    {
-        if ($type === 'masuk') {
-            return $now->lte($shiftStart) ? 'tepat waktu' : 'telat';
-        } elseif ($type === 'pulang') {
-            return $now->gte($shiftEnd) ? 'tepat waktu' : 'pulang awal';
-        }
-        return 'tidak valid';
-    }
-
-    private function createAbsen(Request $request, $type, $shiftId, $status)
+    private function createAbsen(Request $request, $type, $shiftId)
     {
         $now = Carbon::now();
         $absen = Absen::create([
             'user_id' => Auth::id(),
             'jam_absen' => $now,
             'type' => $type,
-            'status' => $status,
             'shift_id' => $shiftId,
             'long' => $request->long,
             'lat' => $request->lat,
             'tanggal' => $now->toDateString()
         ]);
 
-        $message = "Berhasil absen $type";
-        if ($status === 'telat') {
-            $message .= ". Anda telat absen!";
-        }
-
-        return $message;
+        return "Berhasil absen $type";
     }
 
-    private function hasAbsenToday($type)
+    private function hasAbsenToday($type, $shiftId)
     {
         return Absen::where('type', $type)
-                    ->whereDate('tanggal', Carbon::today())
-                    ->where('user_id', Auth::id())
-                    ->exists();
+            ->whereDate('tanggal', Carbon::today())
+            ->where('user_id', Auth::id())
+            ->when($shiftId, function ($query) use ($shiftId) {
+                return $query->where('shift_id', $shiftId);
+            })
+            ->exists();
     }
 
     private function jsonResponse($msg, $alert, $type, $text = null)
     {
         return response()->json(compact('msg', 'alert', 'type', 'text'));
     }
+
+
 }
