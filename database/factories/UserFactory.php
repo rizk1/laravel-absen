@@ -26,24 +26,13 @@ class UserFactory extends Factory
     }
 
     // Factory untuk User dengan jabatan dan shift tertentu
-    public function gatewayOperatorShift2()
+    public function gatewayOperator()
     {
         return $this->state(function () {
             return [
                 'email' => 'gateway@gmail.com',
                 'password' => Hash::make('123456'),
                 'jabatan_id' => Jabatan::where('jabatan', 'Gateway Operator')->first()->id,
-            ];
-        });
-    }
-
-    public function nonShiftUser()
-    {
-        return $this->state(function () {
-            return [
-                'email' => 'nonshift@gmail.com',
-                'password' => Hash::make('123456'),
-                'jabatan_id' => Jabatan::where('jabatan', '1 Non Shift')->first()->id,
             ];
         });
     }

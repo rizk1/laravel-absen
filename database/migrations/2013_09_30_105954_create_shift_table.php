@@ -18,6 +18,7 @@ class CreateShiftTable extends Migration
             $table->string('shift');
             $table->string('mulai');
             $table->string('selesai');
+            $table->foreignId('jabatan_id')->constrained('jabatans')->onDelete('cascade');
             $table->timestamps();
         });
     }

@@ -19,16 +19,14 @@ class DatabaseSeeder extends Seeder
         // Buat data jabatan
         Jabatan::create(['jabatan' => 'Admin']);
         Jabatan::create(['jabatan' => 'Gateway Operator']);
-        Jabatan::create(['jabatan' => '1 Non Shift']);
 
         // Buat data shift
-        Shift::create(['shift' => 'Non Shift', 'mulai' => '09:00', 'selesai' => '18:00']);
-        Shift::create(['shift' => 'Shift 1', 'mulai' => '07:00', 'selesai' => '15:00']);
-        Shift::create(['shift' => 'Shift 2', 'mulai' => '15:00', 'selesai' => '23:00']);
-        Shift::create(['shift' => 'Shift 3', 'mulai' => '23:00', 'selesai' => '07:00']);
+        Shift::create(['shift' => 'Non Shift', 'mulai' => '09:00', 'selesai' => '18:00', 'jabatan_id' => 1]);
+        Shift::create(['shift' => 'Shift 1', 'mulai' => '07:00', 'selesai' => '15:00', 'jabatan_id' => 2]);
+        Shift::create(['shift' => 'Shift 2', 'mulai' => '15:00', 'selesai' => '23:00', 'jabatan_id' => 2]);
+        Shift::create(['shift' => 'Shift 3', 'mulai' => '23:00', 'selesai' => '07:00',  'jabatan_id' => 2]);
 
-        User::factory()->gatewayOperatorShift2()->create();
-        User::factory()->nonShiftUser()->create();
+        User::factory()->gatewayOperator()->create();
         User::factory()->adminNonShift()->create();
     }
 }
