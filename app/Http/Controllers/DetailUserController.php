@@ -38,7 +38,6 @@ class DetailUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,'.$id,
             'jabatan' => 'required',
-            'shift' => 'required',
             'photo' => 'nullable|image|max:2048',
         ]);
 
@@ -47,7 +46,7 @@ class DetailUserController extends Controller
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
             'jabatan_id' => $validatedData['jabatan'],
-            'shift_id' => $validatedData['shift']          
+            // 'shift_id' => $validatedData['shift']          
         ]);
 
         // Handle photo upload

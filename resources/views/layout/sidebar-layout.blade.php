@@ -34,10 +34,14 @@
 <div class="main-sidebar sidebar-style-2">
     <aside id="sidebar-wrapper">
         <div class="sidebar-brand">
-            <a href="index.html">AbsenBG</a>
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('assets/img/infracom.jpg') }}" alt="Logo" style="max-height: 50px;">
+            </a>
         </div>
         <div class="sidebar-brand sidebar-brand-sm">
-            <a href="index.html">AB</a>
+            <a href="{{ route('dashboard') }}">
+                <img src="{{ asset('assets/img/infracom.jpg') }}" alt="Logo" style="max-height: 30px;">
+            </a>
         </div>
         <ul class="sidebar-menu">
             <li class="menu-header">List Menu</li>
