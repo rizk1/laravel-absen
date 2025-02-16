@@ -30,8 +30,15 @@ class AbsenController extends Controller
 
         // Check if the user has already clocked in for any shift today
         $activeShift = Absen::where('user_id', Auth::id())
-            ->where('type', 'masuk')
             ->whereDate('tanggal', Carbon::today())
+            ->whereNotExists(function ($query) {
+                $query->select(DB::raw(1))
+                    ->from('absens as b')
+                    ->whereColumn('b.user_id', 'absens.user_id')
+                    ->whereColumn('b.tanggal', 'absens.tanggal')
+                    ->whereColumn('b.shift_id', 'absens.shift_id')
+                    ->where('b.type', 'pulang');
+            })
             ->first();
 
         // If the user has clocked in, they can only clock overtime or out for the same shift
@@ -65,8 +72,25 @@ class AbsenController extends Controller
 
         // If no active shift, allow clocking in
         if ($request->tipeAbsen == 'masuk') {
-            $message = $this->createAbsen($request, 'masuk', $shiftId);
-            return $this->jsonResponse('success', $message, 'success', $message);
+            $completedShift = Absen::where('user_id', Auth::id())
+                ->whereDate('tanggal', Carbon::today())
+                ->whereExists(function ($query) {
+                    $query->select(DB::raw(1))
+                        ->from('absens as b')
+                        ->whereColumn('b.user_id', 'absens.user_id')
+                        ->whereColumn('b.tanggal', 'absens.tanggal')
+                        ->whereColumn('b.shift_id', 'absens.shift_id')
+                        ->where('b.type', 'masuk')
+                        ->where('b.type', 'pulang');
+                })
+                ->first();
+
+            if (!$completedShift) {
+                $message = $this->createAbsen($request, 'masuk', $shiftId);
+                return $this->jsonResponse('success', $message, 'success', $message);
+            } else {
+                return $this->jsonResponse('failed', 'Anda sudah menyelesaikan shift hari ini.', 'warning');
+            }
         }
 
         return $this->jsonResponse('failed', 'Tipe absen tidak valid atau tidak diizinkan.', 'warning');
