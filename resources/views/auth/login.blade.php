@@ -6,6 +6,11 @@
       <div class="col-12 col-sm-8 offset-sm-2 col-md-6 offset-md-3 col-lg-6 offset-lg-3 col-xl-4 offset-xl-4">
 
         <div class="card card-primary mt-5">
+          <div class="mt-4 text-center">
+            <a href="{{ route('dashboard') }}">
+              <img src="{{ asset('assets/img/infracom.jpg') }}" alt="Logo" style="max-height: 70px;">
+            </a>
+          </div>
           <div class="card-header"><h4>Login</h4></div>
 
           <div class="card-body">
@@ -55,9 +60,9 @@
 
           </div>
         </div>
-        <div class="mt-5 text-muted text-center">
+        {{-- <div class="mt-5 text-muted text-center">
           Don't have an account? <a href="{{url('/auth?action=register')}}">Create One</a>
-        </div>
+        </div> --}}
       </div>
     </div>
 </div>
