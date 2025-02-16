@@ -209,6 +209,7 @@ $(document).ready(function() {
     $('#download-pdf').click(function(e){
         e.preventDefault();
         var url = "{{ route('download-absen-pdf') }}";
+        var userId = $('#user-filter').val();
         if(userId && userId !== 'all') {
             url += '?user_id=' + userId;
         }

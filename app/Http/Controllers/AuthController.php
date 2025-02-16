@@ -16,8 +16,9 @@ class AuthController extends Controller
             return redirect('/absen');
         }
 
-        if ($request->action == 'login') return view('auth.login');
-        if ($request->action == 'register') return view('auth.register');
+        return view('auth.login');
+        // if ($request->action == 'login') return view('auth.login');
+        // if ($request->action == 'register') return view('auth.register');
     }
     
     public function loginUser(Request $request)

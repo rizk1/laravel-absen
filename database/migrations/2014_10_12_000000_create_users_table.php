@@ -20,7 +20,6 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->foreignId('jabatan_id')->nullable()->constrained('jabatans')->onDelete('set null');
-            $table->foreignId('shift_id')->nullable()->constrained('shifts')->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

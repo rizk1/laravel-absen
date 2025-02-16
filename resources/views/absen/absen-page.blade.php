@@ -62,7 +62,7 @@
                         <label for="shift">Pilih Shift</label>
                         <select class="form-control" id="shift" name="shift">
                             @foreach ($shift as $item)
-                                <option value="{{$item->id}}">{{$item->shift}}</option>
+                                <option value="{{$item->id}}">{{$item->shift}} - {{$item->mulai.'-'.$item->selesai}}</option>
                                 
                             @endforeach
                         </select>

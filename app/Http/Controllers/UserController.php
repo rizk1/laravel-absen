@@ -44,7 +44,6 @@ class UserController extends Controller
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:6',
             'jabatan' => 'required',
-            'shift' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -53,7 +52,6 @@ class UserController extends Controller
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'jabatan_id' => $validated['jabatan'],
-            'shift_id' => $validated['shift'],
         ]);
 
         if ($request->hasFile('avatar')) {
@@ -85,7 +83,6 @@ class UserController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'password' => 'nullable|string|min:6',
             'jabatan' => 'required',
-            'shift' => 'required',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
@@ -95,7 +92,6 @@ class UserController extends Controller
             $user->password = Hash::make($validated['password']);
         }
         $user->jabatan_id = $validated['jabatan'];
-        $user->shift_id = $validated['shift'];
         $user->save();
 
         if ($request->hasFile('avatar')) {

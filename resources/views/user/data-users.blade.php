@@ -28,7 +28,6 @@
                     <th>Nama</th>
                     <th>Email</th>
                     <th>Jabatan</th>
-                    <th>Shift</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -73,14 +72,6 @@
                         <select name="jabatan" class="form-control form-control-sm" id="user-jabatan">
                             @foreach ($jabatan as $item)
                                 <option value="{{ $item->id }}">{{ $item->jabatan }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="form-group mb-3">
-                        <label>Shift</label>
-                        <select name="shift" class="form-control form-control-sm" id="user-shift">
-                            @foreach ($shift as $item)
-                                <option value="{{ $item->id }}">{{ $item->shift }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -144,7 +135,6 @@ $(document).ready(function() {
             {data: 'name', name: 'name'},
             {data: 'email', name: 'email'},
             {data: 'jabatan.jabatan', name: 'jabatan'},
-            {data: 'shift.shift', name: 'shift'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });

@@ -72,6 +72,7 @@
 <body>
     <div class="container">
         <div class="header">
+            <img src="{{ public_path('assets/img/infracom.jpg') }}" alt="Logo" style="max-height: 75px; margin-bottom: 20px;">
             <h1 style="font-size: 24px;">Absensi Karyawan Infracom Telesarana</h1>
         </div>
 

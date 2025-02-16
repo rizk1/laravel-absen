@@ -28,6 +28,7 @@ class DashboardController extends Controller
 
         $absenMasuk = (clone $query)->where('type', 'masuk')->count();
         $absenPulang = (clone $query)->where('type', 'pulang')->count();
+        $absenLembur = (clone $query)->where('type', 'lembur')->count();
         $totalAbsen = $query->count();
 
         $totalUsers = $isAdmin ? User::count() : 1;
@@ -40,9 +41,10 @@ class DashboardController extends Controller
         $totalAllDays = [
             'masuk' => (clone $totalAllDaysQuery)->where('type', 'masuk')->count(),
             'pulang' => (clone $totalAllDaysQuery)->where('type', 'pulang')->count(),
+            'lembur' => (clone $totalAllDaysQuery)->where('type', 'lembur')->count(),
             'total' => $totalAllDaysQuery->count(),
         ];
 
-        return view('dashboard.dashboard', compact('absenMasuk', 'absenPulang', 'totalAbsen', 'totalUsers', 'totalAllDays', 'filter', 'isAdmin'));
+        return view('dashboard.dashboard', compact('absenMasuk', 'absenPulang', 'absenLembur', 'totalAbsen', 'totalUsers', 'totalAllDays', 'filter', 'isAdmin'));
     }
 }

@@ -28,7 +28,9 @@ class DataAbsenController extends Controller
             return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('type', function($absen) {
-                if($absen->type == 'masuk' && $absen->jam_absen > Shift::find($absen->shift_id)->jam_mulai) {
+                $strJamAbsen = explode(' ', $absen->jam_absen);
+                $shiftMasuk = Shift::where('id', $absen->shift_id)->pluck('mulai')->first();
+                if($absen->type == 'masuk' && $strJamAbsen[1] > $shiftMasuk) {
                     return 'Masuk (Telat)';
                 }
                 return ucfirst($absen->type);
