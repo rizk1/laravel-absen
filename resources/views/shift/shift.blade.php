@@ -27,6 +27,7 @@
                     <th>Shift</th>
                     <th>Mulai</th>
                     <th>Selesai</th>
+                    <th>Jabatan</th>
                     <th>Aksi</th>
                 </tr>
             </thead>
@@ -83,6 +84,14 @@
                         <label>Selesai</label>
                         <input type="time" class="form-control" name="selesai" required>
                     </div>
+                    <div class="form-group mb-3">
+                        <label>Jabatan</label>
+                        <select name="jabatan_id" class="form-control form-control-sm" required>
+                            @foreach ($jabatan as $item)
+                                <option value="{{ $item->id }}">{{ $item->jabatan }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
@@ -119,6 +128,14 @@
                     <div class="form-group">
                         <label>Selesai</label>
                         <input type="time" class="form-control" name="selesai" id="edit-shift-end" required>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label>Jabatan</label>
+                        <select name="jabatan_id" class="form-control form-control-sm" id="edit-shift-jabatan" required>
+                            @foreach ($jabatan as $item)
+                                <option value="{{ $item->id }}">{{ $item->jabatan }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer bg-whitesmoke br">
@@ -170,6 +187,7 @@ $(document).ready(function() {
             {data: 'shift', name: 'shift'},
             {data: 'mulai', name: 'mulai'},
             {data: 'selesai', name: 'selesai'},
+            {data: 'jabatan', name: 'jabatan'},
             {data: 'action', name: 'action', orderable: false, searchable: false},
         ]
     });
@@ -198,7 +216,8 @@ $(document).ready(function() {
         var formData = {
             shift: $('input[name="shift"]').val(),
             mulai: $('input[name="mulai"]').val(),
-            selesai: $('input[name="selesai"]').val()
+            selesai: $('input[name="selesai"]').val(),
+            jabatan_id: $('select[name="jabatan_id"]').val()
         };
         
         var errors = validateShiftForm(formData);
@@ -233,6 +252,7 @@ $(document).ready(function() {
             $('#edit-shift-name').val(data.shift);
             $('#edit-shift-start').val(data.mulai);
             $('#edit-shift-end').val(data.selesai);
+            $('#edit-shift-jabatan option[value="' + data.jabatan_id + '"]').prop('selected', true);
             $('#modal-edit-shift').modal('show');
         });
     });
@@ -240,10 +260,12 @@ $(document).ready(function() {
     $('#form-edit-shift').submit(function(e) {
         e.preventDefault();
         var id = $('#edit-shift-id').val();
+        
         var formData = {
             shift: $('#edit-shift-name').val(),
             mulai: $('#edit-shift-start').val(),
-            selesai: $('#edit-shift-end').val()
+            selesai: $('#edit-shift-end').val(),
+            jabatan_id: $('#edit-shift-jabatan').val()
         };
         
         var errors = validateShiftForm(formData);

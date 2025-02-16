@@ -12,11 +12,17 @@ class Shift extends Model
     protected $fillable = [
         'shift',
         'mulai',
-        'selesai'
+        'selesai',
+        'jabatan_id'
     ];
 
     public function users()
     {
         return $this->hasMany(User::class, 'shift_id');
+    }
+
+    public function jabatan()
+    {
+        return $this->belongsTo(Jabatan::class);
     }
 }
