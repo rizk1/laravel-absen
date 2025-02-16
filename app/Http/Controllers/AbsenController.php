@@ -72,6 +72,12 @@ class AbsenController extends Controller
 
         // If no active shift, allow clocking in
         if ($request->tipeAbsen == 'masuk') {
+            $shiftPulang = Shift::where('id', $shiftId)->pluck('selesai')->first();
+            $time = Carbon::now()->format('H:i');
+            if ($time > $shiftPulang) {
+                return $this->jsonResponse('failed', 'Waktu absen sudah lewat.', 'warning');
+            }
+            
             $completedShift = Absen::where('user_id', Auth::id())
                 ->whereDate('tanggal', Carbon::today())
                 ->whereExists(function ($query) {
