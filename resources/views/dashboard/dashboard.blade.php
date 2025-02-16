@@ -83,7 +83,7 @@
                     <h4>Absen Lembur</h4>
                 </div>
                 <div class="card-body">
-                    {{ $filter == 'today' ? $absenPulang : $totalAllDays['lembur'] }}
+                    {{ $filter == 'today' ? $absenLembur : $totalAllDays['lembur'] }}
                 </div>
             </div>
         </div>
